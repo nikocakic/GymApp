@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../assets/styles/SignUp.css';
 import { Mail, Lock, User, Calendar, CheckCircle } from 'lucide-react';
 
@@ -21,6 +22,14 @@ const SignUp = () => {
       ...formData,
       [name]: type === 'checkbox' ? checked : value
     });
+  };
+
+  const navigate = useNavigate();
+  const handleGiveUp = () => {
+    const confirmed = window.confirm("Are you sure you want to give up?");
+    if (confirmed) {
+      navigate('/home');
+    }
   };
 
   const validateForm = () => {
@@ -204,6 +213,10 @@ const SignUp = () => {
                 Create Account
               </button>
             </form>
+
+            <button className="giveup-button" onClick={handleGiveUp}>
+                Give up
+            </button>
             
             <div className="login-link-container">
               Already have an account? <a href="/login" className="login-link">Log in</a>
