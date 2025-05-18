@@ -6,6 +6,7 @@ import { Menu, X, User, LogOut, Calendar, Dumbbell, ChevronDown } from 'lucide-r
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
 
   return (
     <header className="header">
@@ -25,21 +26,28 @@ const Header = () => {
           </nav>
 
           <div className="user-actions">
-            <div className="profile-dropdown">
-              <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="profile-button">
-                <User size={18} />
-                <span>Account</span>
-                <ChevronDown size={16} />
-              </button>
-              {isProfileOpen && (
-                <div className="dropdown-menu">
-                  <a href="/profile"><User size={16} /> Profile</a>
-                  <a href="/schedule"><Calendar size={16} /> My Schedule</a>
-                  <a href="/workouts"><Dumbbell size={16} /> Workouts</a>
-                  <a href="/logout" className="logout"><LogOut size={16} /> Logout</a>
-                </div>
-              )}
-            </div>
+            {isLoggedIn ? (
+              <div className="profile-dropdown">
+                <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="profile-button">
+                  <User size={18} />
+                  <span>Account</span>
+                  <ChevronDown size={16} />
+                </button>
+                {isProfileOpen && (
+                  <div className="dropdown-menu">
+                    <a href="/profile"><User size={16} /> Profile</a>
+                    <a href="/schedule"><Calendar size={16} /> My Schedule</a>
+                    <a href="/workouts"><Dumbbell size={16} /> Workouts</a>
+                    <a href="/logout" className="logout"><LogOut size={16} /> Logout</a>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="auth-buttons">
+                <a href="/login" className="btn-signin">Login</a>
+                <a href="/signup" className="btn-register">Register</a>
+              </div>
+            )}
           </div>
 
           <button className="menu-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -55,9 +63,18 @@ const Header = () => {
             <a href="/membership">Membership</a>
             <a href="/contact">Contact</a>
             <div className="nav-divider" />
-            <a href="/profile"><User size={16} /> Profile</a>
-            <a href="/schedule"><Calendar size={16} /> My Schedule</a>
-            <a href="/logout" className="logout"><LogOut size={16} /> Logout</a>
+            {isLoggedIn ? (
+              <>
+                <a href="/profile"><User size={16} /> Profile</a>
+                <a href="/schedule"><Calendar size={16} /> My Schedule</a>
+                <a href="/logout" className="logout"><LogOut size={16} /> Logout</a>
+              </>
+            ) : (
+              <>
+                <a href="/login">Login In</a>
+                <a href="/signup">Register</a>
+              </>
+            )}
           </div>
         )}
       </div>

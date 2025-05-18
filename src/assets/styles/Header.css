@@ -87,7 +87,26 @@
   .logout {
     color: red;
   }
+
+  .auth-buttons a {
+    margin-left: 10px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+  }
   
+  .btn-signin,
+  .btn-register {
+    padding: 6px 12px;
+    border-radius: 4px;
+  }
+  
+  .btn-register {
+    background-color: #007bff;
+    color: white;
+  }
+  
+
   @media (min-width: 768px) {
     .nav-desktop {
       display: flex;

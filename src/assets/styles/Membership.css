@@ -1,0 +1,195 @@
+.membership-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f9fafb;
+  }
+  
+  .membership-content {
+    flex-grow: 1;
+    padding: 3rem 1rem;
+  }
+  
+  /* Header Section */
+  .membership-header {
+    text-align: center;
+    max-width: 768px;
+    margin: 0 auto 3rem;
+  }
+  
+  .membership-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 1rem;
+  }
+  
+  .membership-subtitle {
+    font-size: 1.25rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+  }
+  
+  /* Billing Toggle */
+  .billing-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .billing-option {
+    font-size: 1rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+  }
+  
+  .billing-option.active {
+    color: #111827;
+    font-weight: 500;
+  }
+  
+  .toggle-switch {
+    position: relative;
+    width: 3.5rem;
+    height: 1.75rem;
+    background-color: #e5e7eb;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .toggle-switch.switched {
+    background-color: #4338ca;
+  }
+  
+  .toggle-knob {
+    position: absolute;
+    left: 0.125rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .toggle-switch.switched .toggle-knob {
+    transform: translateX(1.75rem);
+  }
+  
+  .discount-badge {
+    font-size: 0.75rem;
+    background-color: #dcfce7;
+    color: #166534;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    margin-left: 0.5rem;
+    font-weight: 500;
+  }
+  
+  /* Plans Section */
+  .plans-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .plan-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid #e5e7eb;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .plan-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .popular-plan {
+    border: 2px solid #4338ca;
+    transform: scale(1.02);
+  }
+  
+  .popular-plan:hover {
+    transform: scale(1.02) translateY(-4px);
+  }
+  
+  .popular-badge {
+    position: absolute;
+    top: -0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4338ca;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 1rem;
+    border-radius: 999px;
+  }
+  
+  .plan-header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .plan-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 0.5rem;
+  }
+  
+  .plan-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.5;
+  }
+  
+  .plan-pricing {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .currency {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #111827;
+    margin-right: 0.25rem;
+  }
+  
+  .price {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #111827;
+    line-height: 1;
+  }
+  
+  .billing-period {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-left: 0.25rem;
+  }
+  
+  .annual-price-note {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+  }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/styles/SignUp.css';
-import { Mail, Lock, User, Calendar, CheckCircle } from 'lucide-react';
+import { Mail, Lock, User, Calendar } from 'lucide-react';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -11,7 +11,8 @@ const SignUp = () => {
     password: '',
     confirmPassword: '',
     birthdate: '',
-    agreeTerms: false
+    agreeTerms: false,
+    role: 'attendant' // default to Regular Gym Attendant
   });
 
   const [errors, setErrors] = useState({});
@@ -65,6 +66,10 @@ const SignUp = () => {
     
     if (!formData.agreeTerms) {
       newErrors.agreeTerms = 'You must agree to the terms and conditions';
+    }
+
+    if (!formData.role) {
+      newErrors.role = 'Please select a role';
     }
     
     return newErrors;
@@ -192,6 +197,23 @@ const SignUp = () => {
                   />
                 </div>
                 {errors.birthdate && <span className="error-message">{errors.birthdate}</span>}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="role">I am a:</label>
+                <div className="input-group">
+                  <select
+                    id="role"
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className={`form-control ${errors.role ? 'input-error' : ''}`}
+                  >
+                    <option value="attendant">Regular Gym Attendant</option>
+                    <option value="trainer">Trainer</option>
+                  </select>
+                </div>
+                {errors.role && <span className="error-message">{errors.role}</span>}
               </div>
               
               <div className="form-group checkbox-group">
