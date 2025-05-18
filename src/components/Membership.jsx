@@ -12,10 +12,10 @@ const Membership = () => {
   // Define the plans with features and pricing
   const plans = [
     {
-      name: 'Basic',
+      name: 'Subscription for 12 months',
       description: 'Perfect for beginners starting their fitness journey',
-      monthlyPrice: 9.99,
-      annualPrice: 99.99,
+      monthlyPrice: 26.50,
+      annualPrice: 270,
       features: [
         { name: 'Access to basic workout plans', included: true },
         { name: 'Basic fitness tracking', included: true },
@@ -29,10 +29,10 @@ const Membership = () => {
       buttonVariant: 'secondary'
     },
     {
-      name: 'Premium',
+      name: 'Subscription for 6 months',
       description: 'Our most popular plan for serious fitness enthusiasts',
-      monthlyPrice: 19.99,
-      annualPrice: 199.99,
+      monthlyPrice: 30.50,
+      annualPrice: 310,
       features: [
         { name: 'Access to basic workout plans', included: true },
         { name: 'Advanced fitness tracking', included: true },
@@ -47,10 +47,10 @@ const Membership = () => {
       popular: true
     },
     {
-      name: 'Elite',
+      name: 'One time payment',
       description: 'The ultimate fitness experience with personalized coaching',
-      monthlyPrice: 29.99,
-      annualPrice: 299.99,
+      monthlyPrice: 45.5,
+      annualPrice: 270,
       features: [
         { name: 'Access to all workout plans', included: true },
         { name: 'Complete fitness tracking & analytics', included: true },

@@ -6,7 +6,7 @@ import { Menu, X, User, LogOut, Calendar, Dumbbell, ChevronDown } from 'lucide-r
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [isLoggedIn, setIsLoggedIn] = useState(true); 
 
   return (
     <header className="header">
@@ -23,6 +23,7 @@ const Header = () => {
             <a href="/classes">Classes</a>
             <a href="/membership">Membership</a>
             <a href="/contact">Contact</a>
+            <a href="/addSessions">Add sessions</a>
           </nav>
 
           <div className="user-actions">
