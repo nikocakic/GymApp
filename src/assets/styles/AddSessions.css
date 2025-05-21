@@ -178,9 +178,39 @@
     height: 20px;
     border-radius: 50%;
   }
+
+  .join-button {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background: none;
+    border: none;
+    color: #138531;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
   
   .delete-button:hover {
     background-color: rgba(239, 68, 68, 0.1);
+  }
+  
+
+  .join-button:hover {
+    background-color: #45a049;
   }
   
   .add-session-form {

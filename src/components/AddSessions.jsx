@@ -4,6 +4,7 @@ import { Calendar, Clock, Users, Info, CheckCircle } from "lucide-react";
 
 const AddSessions = () => {
   const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const [trainerLoggedIn, setTrainerLoggedIn] = useState(true); //for now this simulates if im logged in as trainer or gym attendant
 
   const timeSlots = [
     "07:00 - 09:00",
@@ -49,12 +50,13 @@ const AddSessions = () => {
     }
 
     const newSession = {
-      id: Date.now(), // Simple unique ID
+      id: Date.now(),
       day: selectedDay,
       time: selectedTime,
       title: sessionTitle,
       description: sessionDescription,
       maxAttendants: maxAttendants,
+      currentAttendants: 0,
     };
 
     setScheduledSessions([...scheduledSessions, newSession]);
@@ -141,18 +143,62 @@ const AddSessions = () => {
                         className={`grid-cell ${session ? "scheduled" : ""}`}
                         key={`${day}-${time}`}
                       >
-                        {session && (
+                        {session && trainerLoggedIn && (
                           <div className="session-info">
                             <div className="session-title">{session.title}</div>
                             <div className="session-attendants">
                               <Users size={14} />
-                              <span>{session.maxAttendants}</span>
+                              <span>
+                                {session.currentAttendants}/
+                                {session.maxAttendants}
+                              </span>
                             </div>
                             <button
                               className="delete-button"
                               onClick={() => handleDeleteSession(session.id)}
                             >
                               &times;
+                            </button>
+                          </div>
+                        )}
+
+                        {session && !trainerLoggedIn && (
+                          <div className="session-info">
+                            <div className="session-title">{session.title}</div>
+                            <div className="session-attendants">
+                              <Users size={14} />
+                              <span>
+                                {session.currentAttendants}/
+                                {session.maxAttendants}
+                              </span>
+                            </div>
+                            <button
+                              className="join-button"
+                              onClick={() => {
+                                if (
+                                  session.currentAttendants <
+                                  session.maxAttendants
+                                ) {
+                                  const updatedSessions = scheduledSessions.map(
+                                    (s) =>
+                                      s.id === session.id
+                                        ? {
+                                            ...s,
+                                            currentAttendants:
+                                              s.currentAttendants + 1,
+                                          }
+                                        : s
+                                  );
+                                  setScheduledSessions(updatedSessions);
+                                  alert(
+                                    `You have joined the session: ${session.title}`
+                                  );
+                                } else {
+                                  alert("This session is full.");
+                                }
+                              }}
+                            >
+                              Join
                             </button>
                           </div>
                         )}
@@ -164,99 +210,103 @@ const AddSessions = () => {
             </div>
           </div>
 
-          <div className="add-session-form">
-            <h2 className="section-title">
-              <Clock size={20} className="section-icon" />
-              Add New Session
-            </h2>
+          {trainerLoggedIn && (
+            <div className="add-session-form">
+              <h2 className="section-title">
+                <Clock size={20} className="section-icon" />
+                Add New Session
+              </h2>
 
-            {scheduleUpdated && (
-              <div className="success-message">
-                <CheckCircle size={16} />
-                Session successfully added to your schedule!
-              </div>
-            )}
+              {scheduleUpdated && (
+                <div className="success-message">
+                  <CheckCircle size={16} />
+                  Session successfully added to your schedule!
+                </div>
+              )}
 
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="sessionTitle">Session Title*</label>
-                <input
-                  type="text"
-                  id="sessionTitle"
-                  value={sessionTitle}
-                  onChange={(e) => setSessionTitle(e.target.value)}
-                  placeholder="e.g., HIIT Workout, Yoga Flow, Strength Training"
-                  required
-                />
-              </div>
-
-              <div className="form-row">
+              <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="sessionDay">Day*</label>
-                  <select
-                    id="sessionDay"
-                    value={selectedDay}
-                    onChange={(e) => setSelectedDay(e.target.value)}
+                  <label htmlFor="sessionTitle">Session Title*</label>
+                  <input
+                    type="text"
+                    id="sessionTitle"
+                    value={sessionTitle}
+                    onChange={(e) => setSessionTitle(e.target.value)}
+                    placeholder="e.g., HIIT Workout, Yoga Flow, Strength Training"
                     required
-                  >
-                    <option value="">Select a day</option>
-                    {weekdays.map((day) => (
-                      <option key={day} value={day}>
-                        {day}
-                      </option>
-                    ))}
-                  </select>
+                  />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="sessionDay">Day*</label>
+                    <select
+                      id="sessionDay"
+                      value={selectedDay}
+                      onChange={(e) => setSelectedDay(e.target.value)}
+                      required
+                    >
+                      <option value="">Select a day</option>
+                      {weekdays.map((day) => (
+                        <option key={day} value={day}>
+                          {day}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="sessionTime">Time Slot*</label>
+                    <select
+                      id="sessionTime"
+                      value={selectedTime}
+                      onChange={(e) => setSelectedTime(e.target.value)}
+                      required
+                    >
+                      <option value="">Select a time</option>
+                      {timeSlots.map((time) => (
+                        <option key={time} value={time}>
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="sessionTime">Time Slot*</label>
-                  <select
-                    id="sessionTime"
-                    value={selectedTime}
-                    onChange={(e) => setSelectedTime(e.target.value)}
+                  <label htmlFor="maxAttendants">Max Attendants*</label>
+                  <input
+                    type="number"
+                    id="maxAttendants"
+                    min="1"
+                    max="50"
+                    value={maxAttendants}
+                    onChange={(e) =>
+                      setMaxAttendants(parseInt(e.target.value, 10))
+                    }
                     required
-                  >
-                    <option value="">Select a time</option>
-                    {timeSlots.map((time) => (
-                      <option key={time} value={time}>
-                        {time}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
-              </div>
 
-              <div className="form-group">
-                <label htmlFor="maxAttendants">Max Attendants*</label>
-                <input
-                  type="number"
-                  id="maxAttendants"
-                  min="1"
-                  max="50"
-                  value={maxAttendants}
-                  onChange={(e) => setMaxAttendants(parseInt(e.target.value))}
-                  required
-                />
-              </div>
+                <div className="form-group">
+                  <label htmlFor="sessionDescription">Description</label>
+                  <textarea
+                    id="sessionDescription"
+                    value={sessionDescription}
+                    onChange={(e) => setSessionDescription(e.target.value)}
+                    placeholder="Describe what clients can expect in this session..."
+                    rows="4"
+                  />
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="sessionDescription">Description</label>
-                <textarea
-                  id="sessionDescription"
-                  value={sessionDescription}
-                  onChange={(e) => setSessionDescription(e.target.value)}
-                  placeholder="Describe what clients can expect in this session..."
-                  rows="4"
-                />
-              </div>
-
-              <div className="form-actions">
-                <button type="submit" className="submit-button">
-                  Add Session
-                </button>
-              </div>
-            </form>
-          </div>
+                <div className="form-actions">
+                  <button type="submit" className="submit-button">
+                    Add Session
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
         </div>
       </main>
 
