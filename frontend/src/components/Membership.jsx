@@ -26,7 +26,6 @@ const Membership = () => {
         { name: "Nutrition planning", included: false },
         { name: "Premium content access", included: false },
       ],
-      buttonVariant: "secondary",
     },
     {
       name: "Subscription for 6 months",
@@ -43,7 +42,6 @@ const Membership = () => {
         { name: "Basic nutrition planning", included: true },
         { name: "Premium content access", included: false },
       ],
-      buttonVariant: "primary",
       popular: true,
     },
     {
@@ -61,7 +59,6 @@ const Membership = () => {
         { name: "Advanced nutrition planning", included: true },
         { name: "Premium content access", included: true },
       ],
-      buttonVariant: "secondary",
     },
   ];
 
@@ -135,15 +132,7 @@ const Membership = () => {
                 </div>
               )}
 
-              <button
-                className={`plan-button ${
-                  plan.buttonVariant === "primary"
-                    ? "plan-button-primary"
-                    : "plan-button-secondary"
-                }`}
-              >
-                Choose {plan.name}
-              </button>
+              <button>Choose {plan.name}</button>
 
               <div className="features-list">
                 <h3 className="features-title">What's included</h3>
