@@ -1,0 +1,127 @@
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.admin-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.admin-title {
+  font-size: 2.5rem;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.admin-subtitle {
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+.requests-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.request-card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.request-info {
+  padding: 1.5rem;
+}
+
+.trainer-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.trainer-email {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.request-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.action-button {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  text-align: center;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.accept-button {
+  background-color: #10b981;
+  color: white;
+}
+
+.accept-button:hover {
+  background-color: #059669;
+}
+
+.decline-button {
+  background-color: #ef4444;
+  color: white;
+}
+
+.decline-button:hover {
+  background-color: #dc2626;
+}
+
+.no-requests {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 0;
+  color: #6b7280;
+}
+
+.no-requests h3 {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  color: #111827;
+}
+
+.no-requests p {
+  margin-top: 0.5rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}

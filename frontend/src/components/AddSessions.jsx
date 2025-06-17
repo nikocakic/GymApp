@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "../assets/styles/AddSessions.css";
 import { Calendar, Clock, Users, Info, CheckCircle } from "lucide-react";
+import Cookies from "js-cookie";
 
 const AddSessions = () => {
   const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  const [trainerLoggedIn, setTrainerLoggedIn] = useState(true); //for now this simulates if im logged in as trainer or gym attendant
+  const [trainerLoggedIn, setTrainerLoggedIn] = useState(false); //for now this simulates if im logged in as trainer or gym attendant
 
   const timeSlots = [
     "07:00 - 09:00",
@@ -22,20 +23,125 @@ const AddSessions = () => {
   const [sessionTitle, setSessionTitle] = useState("");
   const [sessionDescription, setSessionDescription] = useState("");
   const [maxAttendants, setMaxAttendants] = useState(10);
+  const [userId, setUserId] = useState(-1);
   const [scheduleUpdated, setScheduleUpdated] = useState(false);
-
+  const [noAttendants, setNoAttendants] = useState(0); // this number does not represent the number of attendants in the session, but rather to trigger useEffect
   const [scheduledSessions, setScheduledSessions] = useState([]);
+  const [sessionAttendants, setSessionAttendants] = useState([]); // Add this state
+
+  const getCurrentWeekDates = () => {
+    const today = new Date();
+    const currentDay = today.getDay();
+    const monday = new Date(today);
+
+    monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
+
+    return weekdays.map((day, index) => {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + index);
+
+      // Format the date as yyyy-MM-dd
+      const formattedDate = date.toISOString().split("T")[0];
+
+      return {
+        day,
+        date: formattedDate,
+      };
+    });
+  };
+
+  const weekDates = getCurrentWeekDates();
 
   useEffect(() => {
-    if (scheduleUpdated) {
-      const timer = setTimeout(() => {
-        setScheduleUpdated(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [scheduleUpdated]);
+    const fetchSessions = async () => {
+      try {
+        // Get the start and end dates of the current week
+        const startDate = weekDates[0]?.date; // Monday
+        const endDate = weekDates[weekDates.length - 1]?.date; // Friday
 
-  const handleSubmit = (e) => {
+        // Send the start and end dates as query parameters
+        const response = await fetch(
+          `http://localhost:8080/sessions/week?startDate=${startDate}&endDate=${endDate}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          const sessions = await response.json();
+          console.log("Fetched sessions:", sessions);
+          setScheduledSessions(sessions); // Update the state with fetched sessions
+        } else {
+          console.error("Failed to fetch sessions for the week.");
+        }
+      } catch (error) {
+        console.error("Error fetching sessions:", error);
+      }
+    };
+
+    fetchSessions();
+
+    const fetchUserData = async () => {
+      const LOCAL_URL = "http://localhost:8080";
+      const token = Cookies.get("token");
+      await fetch(LOCAL_URL + "/header/info", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      })
+        .then(async (res) => {
+          const data = await res.json();
+          var role = data.role;
+          setUserId(data.id);
+          if (role === "TRAINER") {
+            setTrainerLoggedIn(true);
+          }
+          fetchSessionAttendants(data.id); // Pass the fetched ID directly
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      console.log("User ID:", userId);
+      fetchSessionAttendants(userId);
+      if (scheduleUpdated) {
+        const timer = setTimeout(() => {
+          setScheduleUpdated(false);
+        }, 3000);
+
+        return () => clearTimeout(timer); // Cleanup the timer
+      }
+    };
+
+    fetchUserData();
+  }, [noAttendants]); //[weekDates, scheduleUpdated]); // Dependencies: `weekDates` and `scheduleUpdated`
+
+  const fetchSessionAttendants = async (id) => {
+    console.log("Fetching session attendants for user ID:", id);
+    const LOCAL_URL = "http://localhost:8080";
+    const token = Cookies.get("token");
+    await fetch(LOCAL_URL + `/sessions/getSessionAttendants?id=${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        console.log("Fetched session attendants:", data);
+        setSessionAttendants(data); // Store the fetched attendants in state
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const isSlotTaken = scheduledSessions.some(
@@ -49,49 +155,94 @@ const AddSessions = () => {
       return;
     }
 
+    // Extract the start time from the time slot and format it as HH:mm:ss
+    const timeSlot = selectedTime.split(" - ")[0] + ":00";
+
+    // Get the current week's date for the selected day
+    const selectedDate = weekDates.find(
+      (date) => date.day === selectedDay
+    )?.date;
+
     const newSession = {
-      id: Date.now(),
-      day: selectedDay,
-      time: selectedTime,
+      dayInWeek: selectedDay,
+      timeSlot: timeSlot, // Now in HH:mm:ss format
       title: sessionTitle,
       description: sessionDescription,
       maxAttendants: maxAttendants,
       currentAttendants: 0,
+      date: selectedDate,
     };
 
-    setScheduledSessions([...scheduledSessions, newSession]);
+    try {
+      const response = await fetch("http://localhost:8080/sessions/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newSession),
+      });
 
-    setSessionTitle("");
-    setSessionDescription("");
-    setMaxAttendants(10);
+      if (response.ok) {
+        const savedSession = await response.json();
 
-    setScheduleUpdated(true);
+        // Add the saved session to the local state
+        setScheduledSessions([...scheduledSessions, savedSession]);
+
+        // Reset form fields
+        setSessionTitle("");
+        setSessionDescription("");
+        setMaxAttendants(10);
+        setSelectedDay("");
+        setSelectedTime("");
+
+        setScheduleUpdated(true);
+      } else {
+        alert("Failed to add session. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding session:", error);
+      alert("An error occurred while adding the session.");
+    }
   };
 
-  const handleDeleteSession = (sessionId) => {
-    setScheduledSessions(
-      scheduledSessions.filter((session) => session.id !== sessionId)
-    );
+  const handleDeleteSession = async (id, date, timeSlot) => {
+    try {
+      // Format the date and timeSlot to match the backend's expected format
+      const formattedDate = new Date(date).toISOString().split("T")[0]; // yyyy-MM-dd
+      const formattedTimeSlot = timeSlot; // Already in HH:mm:ss format
+
+      // Send DELETE request to the backend with id, date, and timeSlot as query parameters
+      const response = await fetch(
+        `http://localhost:8080/sessions/delete?id=${id}&date=${formattedDate}&timeSlot=${formattedTimeSlot}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Remove the session from the local state
+        setScheduledSessions(
+          scheduledSessions.filter(
+            (session) =>
+              !(
+                session.id === id &&
+                session.date === date &&
+                session.timeSlot === timeSlot
+              )
+          )
+        );
+        alert("Session deleted successfully.");
+      } else {
+        alert("Failed to delete session. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting session:", error);
+      alert("An error occurred while deleting the session.");
+    }
   };
-
-  const getCurrentWeekDates = () => {
-    const today = new Date();
-    const currentDay = today.getDay();
-    const monday = new Date(today);
-
-    monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
-
-    return weekdays.map((day, index) => {
-      const date = new Date(monday);
-      date.setDate(monday.getDate() + index);
-      return {
-        day,
-        date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`,
-      };
-    });
-  };
-
-  const weekDates = getCurrentWeekDates();
 
   return (
     <div className="add-sessions-container">
@@ -134,8 +285,11 @@ const AddSessions = () => {
                 <div className="day-column" key={day}>
                   <div className="grid-header">{day}</div>
                   {timeSlots.map((time) => {
+                    // Match the fetched session data with the current day and time
                     const session = scheduledSessions.find(
-                      (s) => s.day === day && s.time === time
+                      (s) =>
+                        s.dayInWeek === day &&
+                        s.timeSlot === time.split(" - ")[0] + ":00"
                     );
 
                     return (
@@ -155,7 +309,13 @@ const AddSessions = () => {
                             </div>
                             <button
                               className="delete-button"
-                              onClick={() => handleDeleteSession(session.id)}
+                              onClick={() =>
+                                handleDeleteSession(
+                                  session.id,
+                                  session.date,
+                                  session.timeSlot
+                                )
+                              }
                             >
                               &times;
                             </button>
@@ -172,34 +332,80 @@ const AddSessions = () => {
                                 {session.maxAttendants}
                               </span>
                             </div>
-                            <button
-                              className="join-button"
-                              onClick={() => {
-                                if (
-                                  session.currentAttendants <
-                                  session.maxAttendants
-                                ) {
-                                  const updatedSessions = scheduledSessions.map(
-                                    (s) =>
-                                      s.id === session.id
-                                        ? {
-                                            ...s,
-                                            currentAttendants:
-                                              s.currentAttendants + 1,
-                                          }
-                                        : s
-                                  );
-                                  setScheduledSessions(updatedSessions);
-                                  alert(
-                                    `You have joined the session: ${session.title}`
-                                  );
-                                } else {
-                                  alert("This session is full.");
-                                }
-                              }}
-                            >
-                              Join
-                            </button>
+                            {sessionAttendants.some(
+                              (attendant) =>
+                                attendant.sessionId === session.id &&
+                                attendant.userId === userId
+                            ) ? (
+                              <button
+                                className="join-button green-color"
+                                disabled
+                              >
+                                Joined
+                              </button>
+                            ) : (
+                              <button
+                                className="join-button blue-color"
+                                onClick={async () => {
+                                  if (
+                                    session.currentAttendants <
+                                    session.maxAttendants
+                                  ) {
+                                    try {
+                                      const token = Cookies.get("token");
+                                      const response = await fetch(
+                                        `http://localhost:8080/sessions/join`,
+                                        {
+                                          method: "POST",
+                                          headers: {
+                                            "Content-Type": "application/json",
+                                            Authorization: `Bearer ${token}`,
+                                          },
+                                          body: JSON.stringify({
+                                            sessionId: session.id,
+                                            userId: userId,
+                                          }),
+                                        }
+                                      );
+
+                                      if (response.ok) {
+                                        const updatedSession =
+                                          await response.json();
+
+                                        const updatedSessions =
+                                          scheduledSessions.map((s) =>
+                                            s.id === updatedSession.id
+                                              ? updatedSession
+                                              : s
+                                          );
+                                        setScheduledSessions(updatedSessions);
+
+                                        alert(
+                                          `You have successfully joined the session: ${session.title}`
+                                        );
+                                        setNoAttendants(noAttendants + 1);
+                                      } else {
+                                        alert(
+                                          "Failed to join the session. Please try again."
+                                        );
+                                      }
+                                    } catch (error) {
+                                      console.error(
+                                        "Error joining session:",
+                                        error
+                                      );
+                                      alert(
+                                        "An error occurred while joining the session."
+                                      );
+                                    }
+                                  } else {
+                                    alert("This session is full.");
+                                  }
+                                }}
+                              >
+                                Join
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>

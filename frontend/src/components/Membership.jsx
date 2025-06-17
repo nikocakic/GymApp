@@ -14,8 +14,8 @@ const Membership = () => {
     {
       name: "Subscription for 12 months",
       description: "Perfect for beginners starting their fitness journey",
-      monthlyPrice: 26.5,
-      annualPrice: 270,
+      monthlyPrice: 26,
+      annualPrice: 265,
       features: [
         { name: "Access to basic workout plans", included: true },
         { name: "Basic fitness tracking", included: true },
@@ -30,8 +30,8 @@ const Membership = () => {
     {
       name: "Subscription for 6 months",
       description: "Our most popular plan for serious fitness enthusiasts",
-      monthlyPrice: 30.5,
-      annualPrice: 310,
+      monthlyPrice: 30,
+      annualPrice: 306,
       features: [
         { name: "Access to basic workout plans", included: true },
         { name: "Advanced fitness tracking", included: true },
@@ -45,10 +45,10 @@ const Membership = () => {
       popular: true,
     },
     {
-      name: "One time payment",
-      description: "The ultimate fitness experience with personalized coaching",
-      monthlyPrice: 45.5,
-      annualPrice: 270,
+      name: "Subscription for 3 months",
+      description: "If you're not sure about gym take this plan",
+      monthlyPrice: 45,
+      annualPrice: 459,
       features: [
         { name: "Access to all workout plans", included: true },
         { name: "Complete fitness tracking & analytics", included: true },

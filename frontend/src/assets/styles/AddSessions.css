@@ -185,7 +185,6 @@
     right: 0.25rem;
     background: none;
     border: none;
-    color: #138531;
     font-size: 1rem;
     cursor: pointer;
     display: flex;
@@ -194,7 +193,6 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: #4caf50;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -203,7 +201,12 @@
     font-size: 14px;
     transition: background-color 0.3s ease;
   }
-  
+  .green-color {
+    background-color: #4caf50;
+  }
+  .blue-color {
+    background-color: #2196f3;
+  }
   .delete-button:hover {
     background-color: rgba(239, 68, 68, 0.1);
   }

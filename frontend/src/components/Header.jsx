@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import "../assets/styles/Header.css";
+import Cookies from "js-cookie";
 import {
   Menu,
   X,
@@ -10,11 +12,79 @@ import {
   Dumbbell,
   ChevronDown,
 } from "lucide-react";
+import { set } from "react-hook-form";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState(false);
+  const [admin, setAdmin] = useState(false);
+  const [roleName, setRoleName] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    let user = JSON.parse(localStorage.getItem("user-info"));
+    console.log("ode ide user:");
+    console.log(user);
+    console.log("ode ide token:");
+    console.log(token);
+    if (typeof token === "undefined") {
+      console.log("token je undefined:");
+      setRole(false);
+    } else {
+      console.log("token nije undefined:");
+      console.log("detalji tokena su u nastavku");
+      //const decoded = jwtDecode(token);
+      setRole(true);
+    }
+
+    const fetchUserData = async () => {
+      const LOCAL_URL = "http://localhost:8080";
+
+      await fetch(LOCAL_URL + "/header/info", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      })
+        .then(async (res) => {
+          console.log(res);
+          const data = await res.json();
+          console.log(data);
+          var role = data.role;
+          setIsLoggedIn(true);
+          if (role === "ADMIN") {
+            setAdmin(true);
+            setRoleName("ADMIN");
+          } else if (role === "TRAINER") {
+            setAdmin(false);
+            setRoleName("TRAINER");
+          } else if (role === "GYM_ATTENDANT") {
+            setAdmin(false);
+            setRoleName("GYM_ATTENDANT");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    };
+    if (role) {
+      fetchUserData();
+      console.log("fetcha san user data");
+    }
+  }, [role]);
+
+  const handleLogout = () => {
+    console.log("Logout clicked");
+    Cookies.remove("token");
+    setIsLoggedIn(false); // Update state
+    navigate("/");
+    window.location.reload();
+  };
 
   return (
     <header className="header">
@@ -28,9 +98,12 @@ const Header = () => {
           <nav className="nav-desktop">
             <a href="/">Home</a>
             <a href="/trainers">Trainers</a>
-            <a href="/classes">Classes</a>
+            {roleName === "GYM_ATTENDANT" && <a href="/classes">Classes</a>}
+            {roleName === "ADMIN" && (
+              <a href="/admin/dashboard">Admin Dashboard</a>
+            )}
             <a href="/membership">Membership</a>
-            <a href="/addSessions">Add sessions</a>
+            {roleName === "TRAINER" && <a href="/addSessions">Add sessions</a>}
           </nav>
 
           <div className="user-actions">
@@ -55,9 +128,9 @@ const Header = () => {
                     <a href="/workouts">
                       <Dumbbell size={16} /> Workouts
                     </a>
-                    <a href="/logout" className="logout">
+                    <div className="logout" onClick={handleLogout}>
                       <LogOut size={16} /> Logout
-                    </a>
+                    </div>
                   </div>
                 )}
               </div>

@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Membership from "./components/Membership";
 import Trainers from "./components/Trainers";
 import AddSessions from "./components/AddSessions";
+import AdminDashboard from "./components/AdminDashboard";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/trainers" element={<Trainers/>} />
         <Route path="/addSessions" element={<AddSessions/>} />
         <Route path="/classes" element={<AddSessions/>} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Route>
       <Route path="/login" element={<Login />} />
     </Routes>
