@@ -10,26 +10,7 @@ import java.util.Optional;
 
 public interface UserAccountService extends UserDetailsService {
 	List<UsersEntity> listAll();
-//
-////	List<DataGroup> listDataGroups(UserAccount account);
-////
-//	Optional<UserAccount> findByUsername(String username);
-//
-//
-//	UserAccount getUserAccountByIdUserAccount(Long idUserAccount);
-//
-//	UserAccountDTO login(LoginDTO loginDTO);
-//	void confirmRegistration(String token);
-//
-////	String getInformationAboutParticipant(Long idUserAccount);
-//
-////	public boolean getCertificate(Long idUserAccount, File d);
-//
-//	UserAccount getUserAccountByUsername(String username);
-//
-//	void sendMailToMainAdmin(UserAccount mainAdmin, String type);
-//
-//
+
  List<UsersEntity> listAllDisabled();
 	Optional<UsersEntity> findUserByEmail(String email);
 

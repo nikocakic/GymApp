@@ -12,11 +12,10 @@ import java.util.Optional;
 public interface SessionService {
     List<SessionsEntity> listAll();
     Optional<SessionsEntity> findSessionById(Long id);
-    Optional<SessionsEntity> findSessionByDate(Date date, LocalTime timeSlot); // Updated parameter name
+    Optional<SessionsEntity> findSessionByDate(Date date, LocalTime timeSlot);
     void saveSession(String dayInWeek, LocalTime timeSlot, String title, String description, Integer maxAttendants, Integer currentAttendants, Date date); // Updated parameter name
-    //void saveSession(SessionsEntity sessionsEntity); // Updated parameter name
-    void deleteSession(long id, Date date, LocalTime timeSlot); // Updated parameter name
-    SessionsEntity fetch(Date date, LocalTime timeSlot); // Updated parameter name
+    void deleteSession(long id, Date date, LocalTime timeSlot); 
+    SessionsEntity fetch(Date date, LocalTime timeSlot);
     Optional<SessionsEntity> getSessionById(Long id);
     List<SessionsEntity> findSessionsByDateRange(Date startDate, Date endDate);
     void incrementNOAttendants(Long id);

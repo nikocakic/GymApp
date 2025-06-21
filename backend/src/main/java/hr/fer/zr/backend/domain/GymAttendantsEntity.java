@@ -8,10 +8,10 @@ import java.util.Objects;
 public class GymAttendantsEntity {
 
     @Id
-    private Long id; // This will share the ID with UsersEntity
+    private Long id; 
 
     @OneToOne
-    @MapsId // Maps the ID of GymAttendantsEntity to the ID of UsersEntity
+    @MapsId 
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
     private UsersEntity user;
 

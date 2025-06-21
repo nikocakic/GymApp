@@ -37,7 +37,6 @@ const Header = () => {
     } else {
       console.log("token nije undefined:");
       console.log("detalji tokena su u nastavku");
-      //const decoded = jwtDecode(token);
       setRole(true);
     }
 
@@ -81,7 +80,7 @@ const Header = () => {
   const handleLogout = () => {
     console.log("Logout clicked");
     Cookies.remove("token");
-    setIsLoggedIn(false); // Update state
+    setIsLoggedIn(false);
     navigate("/");
     window.location.reload();
   };

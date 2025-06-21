@@ -20,7 +20,7 @@ public class SessionsEntity {
     private String dayInWeek;
     @Basic
     @Column(name = "timeslot", nullable = false, length = 20)
-    private LocalTime timeSlot; // Field name is timeSlot, not time_slot
+    private LocalTime timeSlot; 
     @Basic
     @Column(name = "title", nullable = false, length = 100)
     private String title;

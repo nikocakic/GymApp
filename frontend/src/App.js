@@ -8,6 +8,8 @@ import Membership from "./components/Membership";
 import Trainers from "./components/Trainers";
 import AddSessions from "./components/AddSessions";
 import AdminDashboard from "./components/AdminDashboard";
+import Profile from "./components/Profile";
+
 
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
         <Route path="/addSessions" element={<AddSessions/>} />
         <Route path="/classes" element={<AddSessions/>} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="/login" element={<Login />} />
     </Routes>

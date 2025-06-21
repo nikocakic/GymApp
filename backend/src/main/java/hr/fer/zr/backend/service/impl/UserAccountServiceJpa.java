@@ -64,21 +64,21 @@ public class UserAccountServiceJpa implements UserAccountService {
     public TrainerEntity saveTrainer(UsersEntity user) {
         System.out.println("Save trainer metoda");
         TrainerEntity trainer = new TrainerEntity();
-        trainer.setUser(user); // Set the user relationship
-        trainer.setRating(BigDecimal.ZERO); // Default rating
+        trainer.setUser(user);
+        trainer.setRating(BigDecimal.ZERO);
         System.out.println("Trener konfiguriran");
-        return trainerRepository.save(trainer); // Save the trainer entity
+        return trainerRepository.save(trainer);
     }
 
     @Override
     public GymAttendantsEntity saveGymA(UsersEntity user) {
         System.out.println("Save gymA metoda");
         GymAttendantsEntity gymA = new GymAttendantsEntity();
-        gymA.setUser(user); // Set the user relationship
+        gymA.setUser(user); 
         gymA.setGymPlanId(1); //deafult value for now
         gymA.setTrainingsDone(0);
         System.out.println("Gym attendant konfiguriran");
-        return gymAttendantsRepository.save(gymA); // Save the trainer entity
+        return gymAttendantsRepository.save(gymA);
     }
 
     @Override

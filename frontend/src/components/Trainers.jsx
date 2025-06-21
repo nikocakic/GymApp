@@ -7,10 +7,9 @@ const Trainers = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    // Fetch trainers data from the backend
     const fetchTrainers = async () => {
       try {
-        const response = await fetch("http://localhost:8080/trainers/getAll"); // Replace with your backend URL
+        const response = await fetch("http://localhost:8080/trainers/getAll");
         if (!response.ok) {
           throw new Error("Failed to fetch trainers");
         }

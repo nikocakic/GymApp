@@ -3,7 +3,6 @@ import "../assets/styles/Login.css";
 import { Mail, Lock, AlertCircle } from "lucide-react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-// Import useNavigate
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -16,7 +15,6 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState("");
 
-  // Initialize navigate
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,7 +24,6 @@ const Login = () => {
       [name]: type === "checkbox" ? checked : value,
     });
 
-    // Clear specific field error when user starts typing
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -34,7 +31,6 @@ const Login = () => {
       });
     }
 
-    // Clear general login error when user makes any change
     if (loginError) {
       setLoginError("");
     }
@@ -81,7 +77,7 @@ const Login = () => {
         return res.headers.get("Authorization");
       })
       .then((data) => {
-        data = data.substring(7); // Remove "BEARER " from start
+        data = data.substring(7);
         const decoded = jwtDecode(data);
         console.log("Decoded JWT:");
         console.log(decoded);

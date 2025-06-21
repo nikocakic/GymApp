@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 
 const AddSessions = () => {
   const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  const [trainerLoggedIn, setTrainerLoggedIn] = useState(false); //for now this simulates if im logged in as trainer or gym attendant
+  const [trainerLoggedIn, setTrainerLoggedIn] = useState(false);
 
   const timeSlots = [
     "07:00 - 09:00",
@@ -25,9 +25,9 @@ const AddSessions = () => {
   const [maxAttendants, setMaxAttendants] = useState(10);
   const [userId, setUserId] = useState(-1);
   const [scheduleUpdated, setScheduleUpdated] = useState(false);
-  const [noAttendants, setNoAttendants] = useState(0); // this number does not represent the number of attendants in the session, but rather to trigger useEffect
+  const [noAttendants, setNoAttendants] = useState(0);
   const [scheduledSessions, setScheduledSessions] = useState([]);
-  const [sessionAttendants, setSessionAttendants] = useState([]); // Add this state
+  const [sessionAttendants, setSessionAttendants] = useState([]);
 
   const getCurrentWeekDates = () => {
     const today = new Date();
@@ -40,7 +40,6 @@ const AddSessions = () => {
       const date = new Date(monday);
       date.setDate(monday.getDate() + index);
 
-      // Format the date as yyyy-MM-dd
       const formattedDate = date.toISOString().split("T")[0];
 
       return {
@@ -55,11 +54,9 @@ const AddSessions = () => {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        // Get the start and end dates of the current week
-        const startDate = weekDates[0]?.date; // Monday
-        const endDate = weekDates[weekDates.length - 1]?.date; // Friday
+        const startDate = weekDates[0]?.date;
+        const endDate = weekDates[weekDates.length - 1]?.date;
 
-        // Send the start and end dates as query parameters
         const response = await fetch(
           `http://localhost:8080/sessions/week?startDate=${startDate}&endDate=${endDate}`,
           {
@@ -72,8 +69,7 @@ const AddSessions = () => {
 
         if (response.ok) {
           const sessions = await response.json();
-          console.log("Fetched sessions:", sessions);
-          setScheduledSessions(sessions); // Update the state with fetched sessions
+          setScheduledSessions(sessions);
         } else {
           console.error("Failed to fetch sessions for the week.");
         }
@@ -101,27 +97,25 @@ const AddSessions = () => {
           if (role === "TRAINER") {
             setTrainerLoggedIn(true);
           }
-          fetchSessionAttendants(data.id); // Pass the fetched ID directly
+          fetchSessionAttendants(data.id);
         })
         .catch((err) => {
           console.error(err);
         });
-      console.log("User ID:", userId);
       fetchSessionAttendants(userId);
       if (scheduleUpdated) {
         const timer = setTimeout(() => {
           setScheduleUpdated(false);
         }, 3000);
 
-        return () => clearTimeout(timer); // Cleanup the timer
+        return () => clearTimeout(timer);
       }
     };
 
     fetchUserData();
-  }, [noAttendants]); //[weekDates, scheduleUpdated]); // Dependencies: `weekDates` and `scheduleUpdated`
+  }, [noAttendants]);
 
   const fetchSessionAttendants = async (id) => {
-    console.log("Fetching session attendants for user ID:", id);
     const LOCAL_URL = "http://localhost:8080";
     const token = Cookies.get("token");
     await fetch(LOCAL_URL + `/sessions/getSessionAttendants?id=${id}`, {
@@ -133,8 +127,7 @@ const AddSessions = () => {
     })
       .then(async (res) => {
         const data = await res.json();
-        console.log("Fetched session attendants:", data);
-        setSessionAttendants(data); // Store the fetched attendants in state
+        setSessionAttendants(data);
       })
       .catch((err) => {
         console.error(err);
@@ -155,17 +148,15 @@ const AddSessions = () => {
       return;
     }
 
-    // Extract the start time from the time slot and format it as HH:mm:ss
     const timeSlot = selectedTime.split(" - ")[0] + ":00";
 
-    // Get the current week's date for the selected day
     const selectedDate = weekDates.find(
       (date) => date.day === selectedDay
     )?.date;
 
     const newSession = {
       dayInWeek: selectedDay,
-      timeSlot: timeSlot, // Now in HH:mm:ss format
+      timeSlot: timeSlot,
       title: sessionTitle,
       description: sessionDescription,
       maxAttendants: maxAttendants,
@@ -185,10 +176,8 @@ const AddSessions = () => {
       if (response.ok) {
         const savedSession = await response.json();
 
-        // Add the saved session to the local state
         setScheduledSessions([...scheduledSessions, savedSession]);
 
-        // Reset form fields
         setSessionTitle("");
         setSessionDescription("");
         setMaxAttendants(10);
@@ -207,11 +196,9 @@ const AddSessions = () => {
 
   const handleDeleteSession = async (id, date, timeSlot) => {
     try {
-      // Format the date and timeSlot to match the backend's expected format
-      const formattedDate = new Date(date).toISOString().split("T")[0]; // yyyy-MM-dd
-      const formattedTimeSlot = timeSlot; // Already in HH:mm:ss format
+      const formattedDate = new Date(date).toISOString().split("T")[0];
+      const formattedTimeSlot = timeSlot;
 
-      // Send DELETE request to the backend with id, date, and timeSlot as query parameters
       const response = await fetch(
         `http://localhost:8080/sessions/delete?id=${id}&date=${formattedDate}&timeSlot=${formattedTimeSlot}`,
         {
@@ -223,7 +210,6 @@ const AddSessions = () => {
       );
 
       if (response.ok) {
-        // Remove the session from the local state
         setScheduledSessions(
           scheduledSessions.filter(
             (session) =>
@@ -285,7 +271,6 @@ const AddSessions = () => {
                 <div className="day-column" key={day}>
                   <div className="grid-header">{day}</div>
                   {timeSlots.map((time) => {
-                    // Match the fetched session data with the current day and time
                     const session = scheduledSessions.find(
                       (s) =>
                         s.dayInWeek === day &&

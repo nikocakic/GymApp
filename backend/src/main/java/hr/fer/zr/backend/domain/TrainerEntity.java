@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 public class TrainerEntity {
 
     @Id
-    private Long id; // This will share the ID with UsersEntity
+    private Long id; 
 
     @OneToOne
-    @MapsId // Maps the ID of TrainerEntity to the ID of UsersEntity
+    @MapsId 
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
     private UsersEntity user;
 
