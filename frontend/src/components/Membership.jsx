@@ -3,13 +3,12 @@ import "../assets/styles/Membership.css";
 import { Check, X } from "lucide-react";
 
 const Membership = () => {
-  const [billingCycle, setBillingCycle] = useState("monthly"); // 'monthly' or 'annual'
+  const [billingCycle, setBillingCycle] = useState("monthly");
 
   const handleBillingCycleChange = (cycle) => {
     setBillingCycle(cycle);
   };
 
-  // Define the plans with features and pricing
   const plans = [
     {
       name: "Subscription for 12 months",

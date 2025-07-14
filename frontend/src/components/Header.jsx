@@ -27,16 +27,9 @@ const Header = () => {
   useEffect(() => {
     const token = Cookies.get("token");
     let user = JSON.parse(localStorage.getItem("user-info"));
-    console.log("ode ide user:");
-    console.log(user);
-    console.log("ode ide token:");
-    console.log(token);
     if (typeof token === "undefined") {
-      console.log("token je undefined:");
       setRole(false);
     } else {
-      console.log("token nije undefined:");
-      console.log("detalji tokena su u nastavku");
       setRole(true);
     }
 
@@ -53,7 +46,6 @@ const Header = () => {
         .then(async (res) => {
           console.log(res);
           const data = await res.json();
-          console.log(data);
           var role = data.role;
           setIsLoggedIn(true);
           if (role === "ADMIN") {
@@ -121,12 +113,16 @@ const Header = () => {
                     <a href="/profile">
                       <User size={16} /> Profile
                     </a>
-                    <a href="/schedule">
-                      <Calendar size={16} /> My Schedule
-                    </a>
-                    <a href="/workouts">
-                      <Dumbbell size={16} /> Workouts
-                    </a>
+                    {roleName !== "ADMIN" && (
+                      <>
+                        <a href="/schedule">
+                          <Calendar size={16} /> My Schedule
+                        </a>
+                        <a href="/workouts">
+                          <Dumbbell size={16} /> Workouts
+                        </a>
+                      </>
+                    )}
                     <div className="logout" onClick={handleLogout}>
                       <LogOut size={16} /> Logout
                     </div>
@@ -166,9 +162,16 @@ const Header = () => {
                 <a href="/profile">
                   <User size={16} /> Profile
                 </a>
-                <a href="/schedule">
-                  <Calendar size={16} /> My Schedule
-                </a>
+                {roleName !== "ADMIN" && (
+                  <>
+                    <a href="/schedule">
+                      <Calendar size={16} /> My Schedule
+                    </a>
+                    <a href="/workouts">
+                      <Dumbbell size={16} /> Workouts
+                    </a>
+                  </>
+                )}
                 <a href="/logout" className="logout">
                   <LogOut size={16} /> Logout
                 </a>
